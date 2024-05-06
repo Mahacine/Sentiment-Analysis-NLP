@@ -2,6 +2,9 @@
 # **Step 1** : Text cleaning
 
 import string
+from collections import Counter
+import matplotlib.pyplot as plt
+
 text = open('read.txt', encoding='utf-8').read()
 # convert the text to lowercase
 lower_case_text = text.lower()
@@ -27,7 +30,28 @@ for word in tokenized_words:
     if word not in stop_words:
         final_words.append(word)
 
-print(final_words)
+#print(final_words)
 
 # **Step 3** : Emotion Analysis (Algorithm)
 
+#loop through each line of the emotions file and clean it
+emotions_list = []
+with open('emotions.txt','r') as emotions_file:
+    for line in emotions_file:
+        clear_line = line.replace('\n','').replace(',','').replace("'",'').strip()
+        word, emotion = clear_line.split(':')
+        #print('Word : '+word+' - Emotion : '+emotion)
+        if word in final_words:
+            emotions_list.append(emotion)
+
+print(emotions_list)
+#Count emotions
+emotions_counter = Counter(emotions_list)
+print(emotions_counter)
+
+# **Step 4 (Optional)** : Emotions Counter Graph
+
+fig, x_axis = plt.subplots()
+x_axis.bar(emotions_counter.keys(),emotions_counter.values())
+fig.autofmt_xdate()
+plt.show()
