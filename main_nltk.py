@@ -6,7 +6,6 @@ from collections import Counter
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
-import matplotlib.pyplot as plt
 
 text = open('read.txt', encoding='utf-8').read()
 # convert the text to lowercase
@@ -22,8 +21,6 @@ final_words = []
 for word in tokenized_words:
     if word not in stopwords.words('english'):
         final_words.append(word)
-
-#print(final_words)
 
 # **Step 3a** : Emotion Analysis (Algorithm)
 
@@ -43,15 +40,20 @@ emotions_counter = Counter(emotions_list)
 # **Step 3b** : Emotion Analysis (NLTK)
 
 def analyze(text_to_analyze):
-    score = SentimentIntensityAnalyzer().polarity_scores(text_to_analyze)
+    # convert the text to lowercase
+    lower_case_text = text_to_analyze.lower()
+    # remove punctuation
+    cleaned_text = lower_case_text.translate(str.maketrans('','',string.punctuation))
+
+    score = SentimentIntensityAnalyzer().polarity_scores(cleaned_text)
     print(score)
     positive_score = score['pos']
     negative_score = score['neg']
     if positive_score > negative_score:
-        return 'Positive'
+        return 'Positive sentiment'
     elif negative_score > positive_score:
-        return 'Negative'
+        return 'Negative sentiment'
     else:
-        return 'Neutral'
+        return 'Neutral sentiment'
 
-print(analyze(cleaned_text))
+print(analyze(text))
