@@ -2,22 +2,41 @@
 <html>
 <head>
     <title>{{ title }}</title>
+    <link rel="stylesheet" type="text/css" href="../styles/main_stylesheet.css">
 </head>
 <body>
-    <h1>Analyze your text</h1>
-    <form action="" method="post" novalidate>
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.text.label }}<br>
-            {{ form.text(size=32) }}<br>
-            {% for error in form.text.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>{{ form.submit() }}</p>
-    </form>
-    {% if form.answer.data %}
-    <p>Analysis Result: {{ form.answer.data }}</p>
-    {% endif %}
+    <div class="container">
+        <h1>Analyze your text</h1>
+        <form action="" method="post" novalidate>
+            {{ form.hidden_tag() }}
+            <div>
+                {{ form.text.label }}<br>
+                {{ form.text(size=32) }}<br>
+                {% for error in form.text.errors %}
+                <span class="error">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+            <div>
+                {{ form.method.label }}<br>
+                {{ form.method(class="form-select") }}<br>
+                {% for error in form.method.errors %}
+                <span class="error">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+            <div>
+                {{ form.submit() }}
+            </div>
+        </form>
+        {% if form.answer.data %}
+        <div class="result">
+            <p><strong>Analysis Result:</strong> {{ form.answer.data }}</p>
+        </div>
+        {% endif %}
+        {% if form.plot.data %}
+        <div>
+            <img src="data:image/png;base64,{{ form.plot.data }}" alt="Emotions Plot">
+        </div>
+        {% endif %}
+    </div>
 </body>
 </html>
