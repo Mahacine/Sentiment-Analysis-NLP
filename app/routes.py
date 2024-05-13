@@ -7,12 +7,18 @@ import io
 import base64
 import matplotlib.pyplot as plt
 
+
 @app.route('/', methods=['GET', 'POST'])
 #@app.route('/index', methods=['GET', 'POST'])
 def index():
     form = TextForm()
     if form.validate_on_submit():
-        text = form.text.data
+        if form.upload_file.data:  # Check if a file is uploaded
+            file = form.upload_file.data
+            file_content = file.stream.read().decode("utf-8")  # Read the content of the file
+            text = file_content
+        else:
+            text = form.text.data
         method = form.method.data
         # Call your method to analyze the text
         if method == 'nltk':
@@ -35,7 +41,7 @@ def index():
             # Encode the plot as a base64 string
             plot_data = base64.b64encode(buffer.getvalue()).decode()
             plt.close(fig)
-            form.plot.data = plot_data  # Assuming you've added a hidden field 'plot' to the form
+            form.plot.data = plot_data
         # Render the template with the updated form
         return render_template('index.html', title="Sentiment analysis", form=form)
     return render_template('index.html', title="Sentiment analysis", form=form)
