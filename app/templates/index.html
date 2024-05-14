@@ -2,23 +2,38 @@
 <html>
 <head>
     <title>{{ title }}</title>
-    <!--<link rel="stylesheet" type="text/css" href="../styles/main_stylesheet.css">-->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main_stylesheet.css') }}">
+    <script>
+        // File name display
+        function updateFileName(input) {
+            var span = document.getElementById('file_name');
+            if (input.files.length > 0) {
+                span.textContent = input.files[0].name;
+            } else {
+                label.textContent = "";
+            }
+        }
+    </script>
 </head>
 <body>
     <div class="container">
         <h1>Analyze your text</h1>
-        <form action="" method="post" enctype="multipart/form-data" novalidate>
+        <form id="text-form" action="" method="post" enctype="multipart/form-data" novalidate>
             {{ form.hidden_tag() }}
             <div>
                 <label for="file-upload" class="custom-file-upload">
                     Upload a ''.txt' file
                 </label>
-                {{ form.upload_file(id="file-upload", style="display: none;") }}
+                <span id="file_name">
+                    
+                </span>
+                {{ form.upload_file(id="file-upload", style="display: none;", onchange="updateFileName(this)") }}
                 {% for error in form.upload_file.errors %}
                     <span class="error">[{{ error }}]</span>
                 {% endfor %}
-            </div> <br />
+            </div>
+            <!--<span id="upload-error" class="error" style="display: none;">[{{ error }}]</span>-->
+            <br />
             <div>
                 {{ form.text.label }}<br>
                 {{ form.text(size=32) }}<br>
@@ -26,6 +41,8 @@
                 <span class="error">[{{ error }}]</span>
                 {% endfor %}
             </div>
+            <!--<span id="text-error" class="error" style="display: none;">[{{ error }}]</span>-->
+            <br />
             <div>
                 {{ form.method.label }}<br>
                 {{ form.method(class="form-select") }}<br>
